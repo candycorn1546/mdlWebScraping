@@ -35,7 +35,6 @@ try:
                     watchers_count = watchers_info.split(': ')[1]
                     watchers_count2 = int(watchers_info.split('from ')[1].split(' users')[0].replace(',', ''))
                     rating = float(watchers_count.split('/')[0])
-
                     if watchers_count2 >= 500:
                         director_name = soup.select_one(
                             '#show-detailsxx > div.show-detailsxss > ul:nth-child(1) > li:nth-child(4)').find('a', class_='text-primary')
@@ -69,21 +68,21 @@ total_runtime = end_time - start_time
 print(f'Total runtime: {total_runtime} seconds')
 
 # Save the DataFrames to the Excel file
-excel_file_path = '/Users/vy/Documents/Data.xlsx'
+excel_file = '/Users/vy/PycharmProjects/mdlWebScraping/Data.xlsx'
 
 # Check if the directory exists
-if not os.path.exists(os.path.dirname(excel_file_path)):
-    print(f"Directory does not exist: {os.path.dirname(excel_file_path)}")
+if not os.path.exists(os.path.dirname(excel_file)):
+    print(f"Directory does not exist: {os.path.dirname(excel_file)}")
 else:
     # Check if the file is writable
-    if not os.access(excel_file_path, os.W_OK):
-        print(f"File is not writable: {excel_file_path}")
+    if not os.access(excel_file, os.W_OK):
+        print(f"File is not writable: {excel_file}")
     else:
         try:
             # Write to the Excel file
-            with pd.ExcelWriter(excel_file_path, engine='xlsxwriter') as writer:
+            with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
                 df_drama.to_excel(writer, sheet_name='Drama', index=False)
                 df_movie.to_excel(writer, sheet_name='Movie', index=False)
-            print(f"Data successfully written to {excel_file_path}")
+            print(f"Data successfully written to {excel_file}")
         except Exception as e:
             print(f"Error writing to Excel file: {e}")
