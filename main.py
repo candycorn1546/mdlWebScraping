@@ -44,8 +44,9 @@ try:
                         modified_text = synopsis.split("(Source")[0]
                         actors = soup.select('li.list-item')
                         genres = soup.find('li', class_='list-item p-a-0 show-genres')
-                        genres_text = genres.get_text(strip=True)
-                        genres_text = genres_text.split('Genres:')[1].strip()
+                        genres_text = genres.get_text(strip=True).split('Genres:')[1].strip()
+                        genresList = [genre.strip() for genre in genres_text.split(',')]
+                        genres_string = '\n '.join(genresList)
                         actors_info = []
                         actor_items = soup.find_all('li', class_='list-item col-sm-4')[:6]
                         for actor_item in actor_items:
@@ -57,7 +58,7 @@ try:
                             })
                         actors_info_str = '\n'.join([f"{info['actor_name']}, Role: {info['role_name']}" for info in actors_info])
 
-                        df.loc[df.shape[0]] = [title, modified_text, director_name_text, actors_info_str, genres_text,
+                        df.loc[df.shape[0]] = [title, modified_text, director_name_text, actors_info_str, genres_string,
                                                rating, watchers_count2, website]
 
 except Exception as e:
@@ -67,22 +68,7 @@ end_time = time.time()
 total_runtime = end_time - start_time
 print(f'Total runtime: {total_runtime} seconds')
 
-# Save the DataFrames to the Excel file
-excel_file = '/Users/vy/PycharmProjects/mdlWebScraping/Data.xlsx'
+csv_directory = '/Users/vy/PycharmProjects/mdlWebScraping/'
+csv_drama_file = os.path.join(csv_directory, 'Data_Drama.csv')
+csv_movie_file = os.path.join(csv_directory, 'Data_Movie.csv')
 
-# Check if the directory exists
-if not os.path.exists(os.path.dirname(excel_file)):
-    print(f"Directory does not exist: {os.path.dirname(excel_file)}")
-else:
-    # Check if the file is writable
-    if not os.access(excel_file, os.W_OK):
-        print(f"File is not writable: {excel_file}")
-    else:
-        try:
-            # Write to the Excel file
-            with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
-                df_drama.to_excel(writer, sheet_name='Drama', index=False)
-                df_movie.to_excel(writer, sheet_name='Movie', index=False)
-            print(f"Data successfully written to {excel_file}")
-        except Exception as e:
-            print(f"Error writing to Excel file: {e}")
