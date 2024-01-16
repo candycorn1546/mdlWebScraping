@@ -1,11 +1,16 @@
+import logging
 import os
 import time
 import pandas as pd
 from bs4 import BeautifulSoup, SoupStrainer
 import requests
 import re
+import concurrent.futures
 
-def scrape_page(url, df):
+# logging.basicConfig(level=logging.DEBUG,
+#                     format='%(asctime)s - %(threadName)s - %(name)s - %(levelname)s - %(message)s')
+
+def scraping(url, df):
     result = requests.get(url)
     content = result.text
     only_a_tags = SoupStrainer("a")
@@ -76,33 +81,63 @@ def scrape_page(url, df):
                     'URL': website
                 }
 
+def scrape_with_threadpool(section, df):
+    urls = [f"https://mydramalist.com/{section}?page={page}" for page in range(1, 3)]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1000) as executor:
+        executor.map(scraping, urls, [df]*len(urls))
 
-start_time = time.time()
-df_drama = pd.DataFrame(
-    columns=['Title', 'Country', 'Synopsis', 'Director', 'Actors', 'Genres', 'Rating', 'Number of Raters', 'URL'])
-df_movie = pd.DataFrame(
-    columns=['Title', 'Country', 'Synopsis', 'Director', 'Actors', 'Genres', 'Rating', 'Number of Raters', 'URL'])
+if __name__ == "__main__":
+    start_time = time.time()
+    total_shows_added = 0
+    total_movies_added = 0
+    section_counts = {}
+    df_drama = pd.DataFrame(
+        columns=['Title', 'Country', 'Synopsis', 'Director', 'Actors', 'Genres', 'Rating', 'Number of Raters', 'URL'])
+    df_movie = pd.DataFrame(
+        columns=['Title', 'Country', 'Synopsis', 'Director', 'Actors', 'Genres', 'Rating', 'Number of Raters', 'URL'])
 
-try:
-    for section, df in zip(['shows/popular', 'shows/top', 'movies/popular', 'movies/top'],
-                           [df_drama, df_drama, df_movie, df_movie]):
-        for page in range(1, 251):
-            website = f"https://mydramalist.com/{section}?page={page}"
-            scrape_page(website, df)
+    try:
+        for section in ['shows/popular', 'shows/top', 'movies/popular', 'movies/top', 'shows/variety', 'shows/newest']:
+            # Pass the correct DataFrame to the function
+            df = df_drama if 'shows' in section else df_movie
 
-except Exception as e:
-    print(e)
+            # Get the initial count before scraping
+            initial_count = df.shape[0]
 
-end_time = time.time()
-total_runtime = end_time - start_time
-print(f'Total runtime: {total_runtime} seconds')
+            scrape_with_threadpool(section, df)
+            items_added = df.shape[0] - initial_count
+            if 'shows' in section:
+                total_shows_added += items_added
+                section_counts[section] = items_added
+                #print(f'{section}: {items_added} shows added')
+            else:
+                total_movies_added += items_added
+                section_counts[section] = items_added
+                #print(f'{section}: {items_added} movies added')
 
-csv_directory = '/Users/vy/PycharmProjects/mdlWebScraping/'
-csv_drama_file = os.path.join(csv_directory, 'Data_Drama.csv')
-csv_movie_file = os.path.join(csv_directory, 'Data_Movie.csv')
-excel_drama_file = os.path.join(csv_directory, 'Data_Drama.xlsx')
-excel_movie_file = os.path.join(csv_directory, 'Data_Movie.xlsx')
-df_drama.to_csv(csv_drama_file, index=False)
-df_drama.to_excel(excel_drama_file, index=False)
-df_movie.to_excel(excel_movie_file, index=False)
-df_movie.to_csv(csv_movie_file, index=False)
+    except Exception as e:
+        print(e)
+
+    end_time = time.time()
+    total_runtime = round((end_time - start_time)/60,2)
+    print(f'Total runtime: {total_runtime} minutes\n')
+
+    # Print the total shows and movies added
+    print(f'Total shows added: {total_shows_added}')
+    print(f'Total movies added: {total_movies_added}')
+
+    # Print the counts for each section
+    for section, count in section_counts.items():
+        print(f'Total added for {section}: {count}')
+
+    csv_directory = '/Users/vy/PycharmProjects/mdlWebScraping/'
+    csv_drama_file = os.path.join(csv_directory, 'Data_Drama.csv')
+    csv_movie_file = os.path.join(csv_directory, 'Data_Movie.csv')
+    excel_drama_file = os.path.join(csv_directory, 'Data_Drama.xlsx')
+    excel_movie_file = os.path.join(csv_directory, 'Data_Movie.xlsx')
+
+    # Save the DataFrames after the loop
+    df_drama.to_csv(csv_drama_file, index=False)
+    df_drama.to_excel(excel_drama_file, index=False)
+    df_movie.to_excel(excel_movie_file, index=False)
+    df_movie.to_csv(csv_movie_file, index=False)
