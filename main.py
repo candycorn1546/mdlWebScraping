@@ -153,8 +153,8 @@ if __name__ == "__main__":
         save_thread_drama = threading.Thread(target=save_dataframe_periodically, args=(df_drama, csv_drama_file, excel_drama_file))
         save_thread_drama.start()
 
-        #for section in ['shows/popular', 'shows/top', 'movies/popular', 'movies/top', 'shows/variety', 'shows/newest']:
-        for section in ['shows/top', 'movies/top', 'shows/variety']:
+        for section in ['shows/popular', 'shows/top', 'movies/popular', 'movies/top', 'shows/variety', 'shows/newest']:
+        #for section in ['shows/top', 'movies/top', 'shows/variety']:
             # Pass the correct DataFrame to the function
             df = df_drama if 'shows' in section else df_movie
 
