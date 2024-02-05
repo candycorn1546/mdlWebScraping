@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Drama Synopsis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Coming Soon', cursive;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+        }
+        #synopsis-container {
+            margin-top: 20px;
+        }
+        #synopsis {
+            margin-top: 20px;
+        }
+        #synopsis.visible {
+            display: block;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Coming Soon', cursive;
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+        #synopsis.move-down {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="title">Random Drama Generator: Pick your next Drama Adventure</h1>
+        <div id="synopsis-container">
+            <div id="synopsisText"></div> <!-- Separate container for synopsis text -->
+        </div>
+        <button id="generateBtn" class="btn">Generate Random Synopsis</button>
+    </div>
+
+    <script>
+        function generateSynopsis() {
+            document.getElementById('title').style.display = 'none';
+            document.getElementById('generateBtn').style.display = 'none';
+
+            fetch('/get_synopsis')
+                .then(response => response.json())
+                .then(data => {
+                    var synopsisTextDiv = document.getElementById('synopsisText'); // Separate container for synopsis text
+                    synopsisTextDiv.innerHTML = '<h3><strong></strong> ' + data.synopsis + '</h3>' +
+                                                '<button id="moreInfoBtn" class="btn">More Information</button>' +
+                                                '<div id="additionalInfo" class="hidden">' +
+                                                '<h1><strong></strong> ' + data.title + '</h1>' +
+                                                '<h4><strong>Synopsis: </strong>'+data.synopsis+ '</h4>' +
+                                                '<p><strong>Country:</strong> ' + data.country + '</p>' +
+                                                '<p><strong>Director:</strong> ' + data.director + '</p>' +
+                                                '<p><strong>Actors:</strong> ' + data.actors + '</p>' +
+                                                '<p><strong>Genres:</strong> ' + data.genres + '</p>' +
+                                                '<p><strong>Rating:</strong> ' + data.rating + '</p>' +
+                                                '<p><strong>Number of Raters:</strong> ' + data.num_raters + '</p>' +
+                                                '<p><strong>URL:</strong> <a href="' + data.url + '">' + data.url + '</a></p>' +
+                                                '</div>' +
+                                                '<button id="rerandomizeBtn" class="btn hidden" style="display: inline-block;">Rerandomize</button>';
+
+                    synopsisTextDiv.classList.add('visible');
+
+                    document.getElementById('moreInfoBtn').addEventListener('click', function() {
+                        var synopsis = document.querySelector('#synopsisText h3');
+                        synopsis.style.display = 'none';
+                        this.style.display = 'none';
+                        document.getElementById('additionalInfo').classList.remove('hidden');
+                        document.getElementById('rerandomizeBtn').classList.remove('hidden');
+
+                    });
+
+                    document.getElementById('rerandomizeBtn').addEventListener('click', function() {
+                        generateSynopsis();
+                    });
+                });
+        }
+
+        document.getElementById('generateBtn').addEventListener('click', generateSynopsis);
+    </script>
+</body>
+</html>
