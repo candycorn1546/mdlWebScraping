@@ -17,6 +17,7 @@
 - ### Data Analysis
   Upon successful data collection, PyShowHarvest proceeds to the analysis phase. Utilizing Pandas for data manipulation and Plotly for visualization, the project generates various charts and graphs. These visualizations provide insights into crucial aspects, including genre distribution, country representation, top actors, and the correlation between viewer ratings and the number of raters.
 
+
 ### Key Features
 - **Genre Distribution:** Explore the distribution of genres in both dramas and movies through interactive pie charts.
 - **Country Representation:** Visualize the geographical distribution of dramas and movies to understand their global representation.
@@ -28,4 +29,45 @@
   - Hover over data points to view detailed information about each title.
   - Click on a data point to open the corresponding MyDramaList page for the selected title in a new browser tab.
   - Gain deeper insights into viewer ratings and popularity trends.  
+
+## Pictures of Data
+1. Pie chart that shows the most popular genres between movies and dramas 
+<img width="1450" alt="Screenshot 2024-02-24 at 10 41 33 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/3df05993-0bc6-4c0c-bc2f-5f4b73b872a2">
+<br><br>
+
+2. Bar graph showing the most popular countries
+<img width="1498" alt="Screenshot 2024-02-24 at 10 56 36 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/9ef16757-0889-4938-aba1-19a45cda4403">
+<br><br>
+
+3. Top 15 actors/actresses who are most well-received on the website
+<img width="1482" alt="Screenshot 2024-02-24 at 10 59 54 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/a38f2dbe-fb2d-4387-bb58-08ab4d58b1e1">
+<br><br>
+
+4. A scatter plot with all dramas identified by country
+<img width="1500" alt="Screenshot 2024-02-24 at 11 01 20 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/e5392b72-fd4b-4fb4-afb1-63d15c798a1f">
+<br><br>
+
+5. A scatter plot with all movies identified by country
+<img width="1499" alt="Screenshot 2024-02-24 at 11 01 52 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/038fc137-e52b-4948-80d2-4b01fe32f2fb">
+<br><br>
+
+6. Combinated scatter plot between movies and dramas
+<img width="1479" alt="Screenshot 2024-02-24 at 11 01 29 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/c383d66e-f9b0-4b88-9285-704e62c4c4a0">
+<br><br>
+7. A scatter plot with all dramas identified by year
+<img width="1493" alt="Screenshot 2024-02-24 at 11 02 00 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/fa68d2a9-ae23-44b6-a0db-e89028d0c00d">
+<br><br>
+8. A scatter plot with all movies identified by country
+<img width="1491" alt="Screenshot 2024-02-24 at 11 02 15 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/c1b0923e-6a08-4bed-b608-b154a800f553">
+<br><br>
+
+## Random Drama Generator Website
+- #### A minimalist-looking website that generates a random drama synopsis, based on the synopsis the user can then learn more information about the dramas or fetch a new synopsis.
+<img width="1512" alt="Screenshot 2024-02-24 at 11 15 30 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/c71d13c9-96a9-4075-a6f8-770a1e7fc52d">
+<img width="1512" alt="Screenshot 2024-02-24 at 11 15 57 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/60a484b7-62b4-4f54-bddf-c6d281219e58">
+<img width="1508" alt="Screenshot 2024-02-24 at 11 16 03 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/b94b5f7c-e28c-44fa-8fe6-c700b706c9c2">
+
+
+
+
 
