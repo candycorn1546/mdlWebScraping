@@ -12,6 +12,6 @@
   3. Iterates through different sections (e.g., popular shows, top movies) to scrape data.
   4. The function extracts relevant information from the parsed HTML using various techniques such as finding specific HTML elements by class name (find, find_all) or using regular expressions (re).
   5. Uses 'scrape_with_threadpool' function to scrape multiple URLs concurrently using ThreadPoolExecutor.
-  6. After scraping, it saves the updated DataFrames to CSV and Excel files.
+  6. After scraping, save the updated DataFrames to CSV and Excel files.
      
 
