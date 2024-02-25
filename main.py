@@ -145,11 +145,10 @@ if __name__ == "__main__":
     total_shows_added = 0  # count
     total_movies_added = 0  # count
     section_counts = {}  # dictionary
-    csv_directory = '/Users/vy/PycharmProjects/mdlWebScraping/'  # Directory path
-    csv_drama_file = os.path.join(csv_directory, 'Data_Drama.csv')  # file path
-    excel_drama_file = os.path.join(csv_directory, 'Data_Drama.xlsx')  # file path
-    csv_movie_file = os.path.join(csv_directory, 'Data_Movie.csv')  # file path
-    excel_movie_file = os.path.join(csv_directory, 'Data_Movie.xlsx')  # file path
+    csv_drama_file = 'Data_Drama.csv'  # file path
+    excel_drama_file = 'Data_Drama.xlsx'  # file path
+    csv_movie_file = 'Data_Movie.csv'  # file path
+    excel_movie_file = 'Data_Movie.xlsx'  # file path
 
     df_drama = load_existing_data(csv_drama_file, excel_drama_file)  # Load existing data
     df_movie = load_existing_data(csv_movie_file, excel_movie_file)  # Load existing data
