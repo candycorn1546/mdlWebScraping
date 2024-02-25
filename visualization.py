@@ -1,20 +1,23 @@
+import os
 import webbrowser
 import pandas as pd
 import plotly.express as px
 import dash
 from dash import dcc, html
 
-def create_charts(df_drama, df_movie):
+
+def create_charts(df_drama, df_movie):  # create all the graphs
     df_drama['Type'] = 'Drama'
     df_movie['Type'] = 'Movie'
     df_combined = pd.concat([df_drama, df_movie], ignore_index=True)
 
-    app = dash.Dash(__name__)
+    app = dash.Dash(__name__)  # framework for graph
 
-    app.layout = html.Div([
-        html.H1("Combined Drama and Movie Data Analysis"),
+    app.layout = (html.Div
+        ([
+        html.H1("Drama and Movie Data Analysis"),  # title
 
-        html.Div([
+        html.Div([  # pie chart
             dcc.Graph(id='genre-pie-chart'),
             dcc.Graph(id='movie-genre-pie-chart'),
         ], style={'display': 'flex'}),
@@ -26,10 +29,14 @@ def create_charts(df_drama, df_movie):
         dcc.Graph(id='scatter-plot-movie'),
         dcc.Location(id='redirect-url'),
         dcc.Graph(id='scatter-plot-drama-year'),
-    ])
+        dcc.Graph(id='scatter-plot-movie-year'),
+    ]))
 
-    def create_scatter_plot_drama(df, title):
-        fig = px.scatter(df[df['Type'] == 'Drama'], x='Rating', y='Number of Raters', title=title,
+    def create_scatter_plot_drama(df, title):  # scatter drama plot
+        fig = px.scatter(df[df['Type'] == 'Drama'],
+                         x='Rating',  # x-axis  rating
+                         y='Number of Raters',  # y-axis number of raters
+                         title=title,  # title of the plot
                          labels={'Rating': 'Rating', 'Number of Raters': 'Number of Raters'},
                          hover_name='Title', color='Country', custom_data=['URL'])
         fig.update_traces(mode='markers', marker=dict(size=8), selector=dict(mode='markers'),
@@ -45,11 +52,11 @@ def create_charts(df_drama, df_movie):
         )
         return fig
 
-    def create_scatter_plot_combined(df, title, color_column):
+    def create_scatter_plot_combined(df, title, color_column):  # scatter plot for drama and movie combined
         fig = px.scatter(df, x='Rating', y='Number of Raters', title=title,
                          labels={'Rating': 'Rating', 'Number of Raters': 'Number of Raters'},
                          hover_name='Title', color=color_column, custom_data=['URL'],
-                         color_discrete_map={'Drama': 'blue', 'Movie': 'green'})
+                         color_discrete_map={'Drama': 'red', 'Movie': 'yellow'})
         fig.update_traces(mode='markers', marker=dict(size=8), selector=dict(mode='markers'), customdata=df['URL'])
         fig.update_traces(
             customdata=df['URL'],
@@ -62,7 +69,7 @@ def create_charts(df_drama, df_movie):
         )
         return fig
 
-    def create_scatter_plot_movie(df, title):
+    def create_scatter_plot_movie(df, title):  # create scatter plot for movie only
         fig = px.scatter(df[df['Type'] == 'Movie'], x='Rating', y='Number of Raters', title=title,
                          labels={'Rating': 'Rating', 'Number of Raters': 'Number of Raters'},
                          hover_name='Title', color='Country', custom_data=['URL'])
@@ -247,10 +254,13 @@ def create_charts(df_drama, df_movie):
         dash.dependencies.Output('redirect-url', 'pathname'),
         [dash.dependencies.Input('scatter-plot-drama', 'clickData'),
          dash.dependencies.Input('scatter-plot-combined', 'clickData'),
-         dash.dependencies.Input('scatter-plot-movie', 'clickData')]
+         dash.dependencies.Input('scatter-plot-movie', 'clickData'),
+         dash.dependencies.Input('scatter-plot-drama-year', 'clickData'),
+         dash.dependencies.Input('scatter-plot-movie-year', 'clickData')]
     )
-    def update_redirect_url(clickData_drama, clickData_combined, clickData_movie):
-        clickData = clickData_drama or clickData_combined or clickData_movie
+    def update_redirect_url(clickData_drama, clickData_combined, clickData_movie, clickData_drama_year,
+                            clickData_movie_year):
+        clickData = clickData_drama or clickData_combined or clickData_movie or clickData_drama_year or clickData_movie_year
         if clickData and 'points' in clickData and clickData['points']:
             title = clickData['points'][0]['hovertext']
             print("Clicked Title:", title)
@@ -285,10 +295,36 @@ def create_charts(df_drama, df_movie):
         )
         return fig
 
-    app.run_server(debug=True, use_reloader=False, port=1874)
+    @app.callback(
+        dash.dependencies.Output('scatter-plot-movie-year', 'figure'),
+        [dash.dependencies.Input('scatter-plot-movie-year', 'clickData')]
+    )
+    def update_scatter_plot_movie_year(clickData):
+        return create_scatter_plot_movie_year(df_combined, 'Movie Scatter Plot (Colored by Year)')
+
+    def create_scatter_plot_movie_year(df, title):
+        fig = px.scatter(df[df['Type'] == 'Movie'], x='Rating', y='Number of Raters', title=title,
+                         labels={'Rating': 'Rating', 'Number of Raters': 'Number of Raters'},
+                         hover_name='Title', color='Year', custom_data=['URL'],
+                         color_continuous_scale='Rainbow')  # Choose your desired color scale
+        fig.update_traces(mode='markers', marker=dict(size=8), selector=dict(mode='markers'),
+                          customdata=df[df['Type'] == 'Movie']['URL'])
+        fig.update_traces(
+            customdata=df[df['Type'] == 'Movie']['URL'],
+            selector=dict(mode='markers'),
+            hovertemplate="<br>".join([
+                "Title: %{hovertext}",
+                "Rating: %{x}",
+                "Number of Raters: %{y}"
+            ])
+        )
+        return fig
+
+    app.run_server(debug=True, use_reloader=False, port=4874)
+
 
 if __name__ == "__main__":
-    df_drama = pd.read_csv('/Users/vy/PycharmProjects/mdlWebScraping/Data_Drama.csv')
-    df_movie = pd.read_csv('/Users/vy/PycharmProjects/mdlWebScraping/Data_Movie.csv')
+    df_drama = pd.read_csv('Data_Drama.csv')
+    df_movie = pd.read_csv('Data_Movie.csv')
     df_combined = pd.concat([df_drama, df_movie], ignore_index=True)
     create_charts(df_drama, df_movie)

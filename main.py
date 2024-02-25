@@ -10,6 +10,7 @@ import threading
 
 df_lock = threading.Lock()
 save_updates = True
+logging.basicConfig(filename='scraping_logs.log', level=logging.ERROR) #logging
 
 
 def load_existing_data(csv_file, excel_file):  # function for loading existing df

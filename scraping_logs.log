@@ -1,0 +1,1 @@
+ERROR:root:Error while scraping https://mydramalist.com/shows/popular?page=192: 'NoneType' object has no attribute 'get_text'
