@@ -64,7 +64,9 @@
 ## Random Drama Generator Website
 - #### A minimalist-looking website that generates a random drama synopsis, based on the synopsis the user can then learn more information about the dramas or fetch a new synopsis.
 <img width="1512" alt="Screenshot 2024-02-24 at 11 15 30 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/c71d13c9-96a9-4075-a6f8-770a1e7fc52d">
+<br><br>
 <img width="1512" alt="Screenshot 2024-02-24 at 11 15 57 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/60a484b7-62b4-4f54-bddf-c6d281219e58">
+<br><br>
 <img width="1508" alt="Screenshot 2024-02-24 at 11 16 03 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/b94b5f7c-e28c-44fa-8fe6-c700b706c9c2">
 
 
