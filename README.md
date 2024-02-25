@@ -69,6 +69,9 @@
 <br><br>
 <img width="1508" alt="Screenshot 2024-02-24 at 11 16 03 PM" src="https://github.com/candycorn1546/mdlWebScraping/assets/157404986/b94b5f7c-e28c-44fa-8fe6-c700b706c9c2">
 
+### Disclaimer
+- This project is for education purposes only. Do not use this application maliciously and be well aware of what you are doing before executing or modifying the program.
+
 
 
 
