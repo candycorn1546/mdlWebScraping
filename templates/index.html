@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Drama Synopsis</title>
-    <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&display=swap" rel="stylesheet">
+    <title>Random Drama Synopsis</title> <!-- Title of the page -->
+    <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&display=swap" rel="stylesheet"> <!-- font for the title -->
     <style>
         body {
             font-family: 'Coming Soon', cursive;
@@ -54,22 +54,22 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 id="title">Random Drama Generator: What are you binging next?</h1>
+    <div class="container"> <!-- container for page -->
+        <h1 id="title">Random Drama Generator: What are you binging next?</h1>  <!-- Title of the page -->
         <div id="synopsis-container">
             <div id="synopsisText"></div> <!-- Separate container for synopsis text -->
         </div>
-        <button id="generateBtn" class="btn">Generate Random Synopsis</button>
+        <button id="generateBtn" class="btn">Generate Random Synopsis</button> <!-- Button to generate random synopsis -->
     </div>
 
-    <script>
-        function generateSynopsis() {
-            document.getElementById('title').style.display = 'none';
-            document.getElementById('generateBtn').style.display = 'none';
+    <script> // JavaScript to fetch random synopsis from the server
+        function generateSynopsis() { // Function to fetch random synopsis from the server
+            document.getElementById('title').style.display = 'none';  // Hide the title
+            document.getElementById('generateBtn').style.display = 'none'; // Hide the generate button
 
-            fetch('/get_synopsis')
-                .then(response => response.json())
-                .then(data => {
+            fetch('/get_synopsis') // Fetch random synopsis from the server
+                .then(response => response.json()) // Convert the response to JSON
+                .then(data => { // Display the synopsis and additional information
                     var synopsisTextDiv = document.getElementById('synopsisText'); // Separate container for synopsis text
                     synopsisTextDiv.innerHTML = '<h3><strong></strong> ' + data.synopsis + '</h3>' +
                                                 '<button id="moreInfoBtn" class="btn">More Information</button>' +
@@ -86,24 +86,25 @@
                                                 '</div>' +
                                                 '<button id="rerandomizeBtn" class="btn hidden" style="display: inline-block;">Rerandomize</button>';
 
-                    synopsisTextDiv.classList.add('visible');
+                    synopsisTextDiv.classList.add('visible'); // Make the synopsis text visible
 
-                    document.getElementById('moreInfoBtn').addEventListener('click', function() {
-                        var synopsis = document.querySelector('#synopsisText h3');
-                        synopsis.style.display = 'none';
-                        this.style.display = 'none';
-                        document.getElementById('additionalInfo').classList.remove('hidden');
+                    document.getElementById('moreInfoBtn').addEventListener('click', function()
+                    {
+                        var synopsis = document.querySelector('#synopsisText h3'); // Display the additional information
+                        synopsis.style.display = 'none'; // Hide the synopsis
+                        this.style.display = 'none'; // Hide the more information button
+                        document.getElementById('additionalInfo').classList.remove('hidden'); // Make the additional information visible
                         document.getElementById('rerandomizeBtn').classList.remove('hidden');
 
                     });
 
-                    document.getElementById('rerandomizeBtn').addEventListener('click', function() {
+                    document.getElementById('rerandomizeBtn').addEventListener('click', function() { // Rerandomize the synopsis
                         generateSynopsis();
                     });
                 });
         }
 
-        document.getElementById('generateBtn').addEventListener('click', generateSynopsis);
+        document.getElementById('generateBtn').addEventListener('click', generateSynopsis); // Add event listener to the generate button
     </script>
 </body>
 </html>

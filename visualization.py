@@ -18,18 +18,18 @@ def create_charts(df_drama, df_movie):  # create all the graphs
         html.H1("Drama and Movie Data Analysis"),  # title
 
         html.Div([  # pie chart
-            dcc.Graph(id='genre-pie-chart'),
-            dcc.Graph(id='movie-genre-pie-chart'),
-        ], style={'display': 'flex'}),
+            dcc.Graph(id='genre-pie-chart'),  # genre pie chart
+            dcc.Graph(id='movie-genre-pie-chart'),  # movie genre pie chart
+        ], style={'display': 'flex'}),  # display the pie chart in a row
 
-        dcc.Graph(id='country-bar-chart'),
-        dcc.Graph(id='top-actors-chart'),
-        dcc.Graph(id='scatter-plot-drama'),
-        dcc.Graph(id='scatter-plot-combined'),
-        dcc.Graph(id='scatter-plot-movie'),
-        dcc.Location(id='redirect-url'),
-        dcc.Graph(id='scatter-plot-drama-year'),
-        dcc.Graph(id='scatter-plot-movie-year'),
+        dcc.Graph(id='country-bar-chart'),  # bar chart for country
+        dcc.Graph(id='top-actors-chart'),  # bar chart for top actors
+        dcc.Graph(id='scatter-plot-drama'),  # scatter plot for drama
+        dcc.Graph(id='scatter-plot-combined'),  # scatter plot for combined
+        dcc.Graph(id='scatter-plot-movie'),  # scatter plot for movie
+        dcc.Location(id='redirect-url'),  # redirect url
+        dcc.Graph(id='scatter-plot-drama-year'),  # scatter plot for drama year
+        dcc.Graph(id='scatter-plot-movie-year'),  # scatter plot for movie year
     ]))
 
     def create_scatter_plot_drama(df, title):  # scatter drama plot
@@ -40,8 +40,8 @@ def create_charts(df_drama, df_movie):  # create all the graphs
                          labels={'Rating': 'Rating', 'Number of Raters': 'Number of Raters'},
                          hover_name='Title', color='Country', custom_data=['URL'])
         fig.update_traces(mode='markers', marker=dict(size=8), selector=dict(mode='markers'),
-                          customdata=df[df['Type'] == 'Drama']['URL'])
-        fig.update_traces(
+                          customdata=df[df['Type'] == 'Drama']['URL'])  # update the traces
+        fig.update_traces(  # update the traces
             customdata=df[df['Type'] == 'Drama']['URL'],
             selector=dict(mode='markers'),
             hovertemplate="<br>".join([
@@ -50,7 +50,7 @@ def create_charts(df_drama, df_movie):  # create all the graphs
                 "Number of Raters: %{y}"
             ])
         )
-        return fig
+        return fig  # return the figure
 
     def create_scatter_plot_combined(df, title, color_column):  # scatter plot for drama and movie combined
         fig = px.scatter(df, x='Rating', y='Number of Raters', title=title,
@@ -86,19 +86,20 @@ def create_charts(df_drama, df_movie):  # create all the graphs
         )
         return fig
 
-    @app.callback(
+    @app.callback(  # callback for genre pie chart
         dash.dependencies.Output('genre-pie-chart', 'figure'),
         [dash.dependencies.Input('genre-pie-chart', 'clickData')]
     )
-    def update_genre_pie_chart(clickData):
+    def update_genre_pie_chart(clickData):  # update the genre pie chart
         try:
-            genres_series = df_combined['Genres'].dropna()
-            flat_genres = [genre.strip() for genres_str in genres_series for genre in genres_str.split('\n')]
-            genre_counts = pd.Series(flat_genres).value_counts(normalize=True) * 100
-            threshold = 2
-            small_sections = genre_counts[genre_counts < threshold]
-            genre_counts = genre_counts[genre_counts >= threshold]
-            if not small_sections.empty:
+            genres_series = df_combined['Genres'].dropna()  # drop the na values
+            flat_genres = [genre.strip() for genres_str in genres_series for genre in
+                           genres_str.split('\n')]  # split the genres
+            genre_counts = pd.Series(flat_genres).value_counts(normalize=True) * 100  # count the genres
+            threshold = 2  # threshold for the genres
+            small_sections = genre_counts[genre_counts < threshold]  # small sections
+            genre_counts = genre_counts[genre_counts >= threshold]  # genre counts
+            if not small_sections.empty:  # if small sections are not empty
                 genre_counts['Other'] = small_sections.sum()
 
             fig = px.pie(
@@ -125,14 +126,15 @@ def create_charts(df_drama, df_movie):  # create all the graphs
             print(f"Error in update_genre_pie_chart: {str(e)}")
             return dash.no_update
 
-    @app.callback(
+    @app.callback(  # callback for movie genre pie chart
         dash.dependencies.Output('movie-genre-pie-chart', 'figure'),
         [dash.dependencies.Input('movie-genre-pie-chart', 'clickData')]
     )
-    def update_movie_genre_pie_chart(clickData):
+    def update_movie_genre_pie_chart(clickData):  # update the movie genre pie chart
         try:
             movie_genres_series = df_combined[df_combined['Type'] == 'Movie']['Genres'].dropna()
             flat_movie_genres = [genre.strip() for genres_str in movie_genres_series for genre in
+                                 # split the movie genres
                                  genres_str.split('\n')]
             movie_genre_counts = pd.Series(flat_movie_genres).value_counts(normalize=True) * 100
             threshold = 2
@@ -259,15 +261,15 @@ def create_charts(df_drama, df_movie):  # create all the graphs
          dash.dependencies.Input('scatter-plot-movie-year', 'clickData')]
     )
     def update_redirect_url(clickData_drama, clickData_combined, clickData_movie, clickData_drama_year,
-                            clickData_movie_year):
+                            clickData_movie_year):  # Redirect to the URL of the clicked title
         clickData = clickData_drama or clickData_combined or clickData_movie or clickData_drama_year or clickData_movie_year
-        if clickData and 'points' in clickData and clickData['points']:
-            title = clickData['points'][0]['hovertext']
-            print("Clicked Title:", title)
+        if clickData and 'points' in clickData and clickData['points']:  # If a point is clicked
+            title = clickData['points'][0]['hovertext']  # Get the title
+            print("Clicked Title:", title)  # print the title
             url = df_combined[df_combined['Title'] == title]['URL'].iloc[0] if title in df_combined[
-                'Title'].values else None
+                'Title'].values else None  # get the url
             if url:
-                webbrowser.open_new_tab(url)
+                webbrowser.open_new_tab(url)  # open the url in a new tab
                 return '/'  # Use the URL for redirection
 
     @app.callback(
@@ -296,7 +298,7 @@ def create_charts(df_drama, df_movie):  # create all the graphs
         return fig
 
     @app.callback(
-        dash.dependencies.Output('scatter-plot-movie-year', 'figure'),
+        dash.dependencies.Output('scatter-plot-movie-year', 'figure'),  # scatter plot for movie year
         [dash.dependencies.Input('scatter-plot-movie-year', 'clickData')]
     )
     def update_scatter_plot_movie_year(clickData):
@@ -320,7 +322,7 @@ def create_charts(df_drama, df_movie):  # create all the graphs
         )
         return fig
 
-    app.run_server(debug=True, use_reloader=False, port=4874)
+    app.run_server(use_reloader=False, port=4874)  # run the server
 
 
 if __name__ == "__main__":

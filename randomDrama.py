@@ -12,23 +12,23 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/get_synopsis')
+@app.route('/get_synopsis') # route to get the synopsis
 def get_synopsis():
-    random_row = drama_data.sample()
-    title = random_row['Title'].values[0]
-    country = random_row['Country'].values[0]
-    synopsis = random_row['Synopsis'].values[0]
-    director = random_row['Director'].values[0]
-    actors = random_row['Actors'].values[0]
-    actors_list = actors.split("\n")
-    actors = "<br>".join(actors_list)
+    random_row = drama_data.sample() # get a random row
+    title = random_row['Title'].values[0] # get the title
+    country = random_row['Country'].values[0] # get the country
+    synopsis = random_row['Synopsis'].values[0]     # get the synopsis
+    director = random_row['Director'].values[0] # get the director
+    actors = random_row['Actors'].values[0] # get the actors
+    actors_list = actors.split("\n") # split the actors
+    actors = "<br>".join(actors_list) # join the actors
 
-    genres = random_row['Genres'].values[0]
-    rating = float(random_row['Rating'].values[0])
-    num_raters = int(random_row['Number of Raters'].values[0])
-    url = random_row['URL'].values[0]
+    genres = random_row['Genres'].values[0] # get the genres
+    rating = float(random_row['Rating'].values[0]) # get the rating
+    num_raters = int(random_row['Number of Raters'].values[0]) # get the number of raters
+    url = random_row['URL'].values[0]   # get the url
 
-    response = {
+    response = { # create a response
         'title': title,
         'country': country,
         'synopsis': synopsis,
@@ -40,8 +40,8 @@ def get_synopsis():
         'url': url
     }
 
-    return response
+    return response     # return the response
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=2748)
+    app.run(port=2748)
