@@ -330,3 +330,5 @@ if __name__ == "__main__":
     df_movie = pd.read_csv('Data_Movie.csv')
     df_combined = pd.concat([df_drama, df_movie], ignore_index=True)
     create_charts(df_drama, df_movie)
+
+# Project maintenance review
